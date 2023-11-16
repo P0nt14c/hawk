@@ -5,34 +5,93 @@
 
 # lib.py
 # common library functions for Hawk
-
-from scapy.all import *
-
-C2_IP = "192.168.1.1"
-
-class Payload(Packet):
-    name = "Payload"
-    fields_desc = [
-        BitField("data", 0, 3)
-    ]
+import config
 
 
-def build_packet(pl: Payload):
-    ip_layer = IP(dst=C2_IP)
 
-    tcp_layer = TCP(
-        reserved=pl
+from scapy.all import TCP
+
+# implement methods for SYN, SYN ACK, ACK, FIN
+
+def set_payload(pkt: TCP, payload: bytes) -> TCP:
+    pkt.reserved = payload
+    return TCP
+
+
+def create_syn() -> TCP:
+    pkt = TCP(
+        sport=config.SPORT,
+        dport=config.DPORT,
+        flags="S"
     )
+    return pkt
 
-    return ip_layer/tcp_layer
+
+def create_synack() -> TCP:
+    pkt = TCP(
+        sport=config.SPORT,
+        dport=config.DPORT,
+        flags="SA"
+    )
+    return pkt
 
 
-def send_start():
-    payload = Payload(data=101)
-    start_packet = build_packet(payload)
-    send(start_packet)
+def create_ack() -> TCP:
+    pkt = TCP(
+        sport=config.SPORT,
+        dport=config.DPORT,
+        flags="A"
+    )
+    return pkt
 
-def send_bits(bits):
-    payload = Payload(data=bits)
-    packet = build_packet(payload)
-    send(packet)
+
+def create_fin() -> TCP:
+    pkt = TCP(
+        sport=config.SPORT,
+        dport=config.DPORT,
+        flags="F"
+    )
+    return pkt
+
+
+def create_pa() -> TCP:
+    pkt = TCP(
+        sport=config.SPORT,
+        dport=config.DPORT,
+        flags="PA"
+    )
+    return pkt
+
+
+def handle_syn(packet):
+    if TCP in packet and packet[TCP].flags == "S":
+        print("[+] Recieved SYN Packet")
+
+
+def handle_synack(packet):
+    if TCP in packet and packet[TCP].flags == "SA":
+        print("[+] Recieved SYN/ACK Packet")
+
+
+def handle_ack(packet):
+    if TCP in packet and packet[TCP].flags == "A":
+        print("[+] Recieved ACK Request")
+
+
+
+
+def create_conn():
+    pass
+    # send SYN
+    # sniff for TCP on port... send to handle SYN/ACK
+    # send ACK
+    # send data
+    # send FIN
+
+def listen_conn():
+    pass
+    # sniff for TCP on port... send to handle SYN
+    # send SYN/ACK
+    # sniff for TCP on port... send to handle ACK
+    # recieve data
+    # wait for FIN

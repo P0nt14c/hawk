@@ -6,4 +6,12 @@
 # client.py
 # Client for Hawk
 
-# TODO implement client side
+
+
+
+def main():
+    # establish connection - get cmd
+    # run cmd
+    # establish connection - return output 
+    
+    

@@ -1,0 +1,10 @@
+# CONFIG.PY for Hawk
+
+
+SMUGGLEMODE = False
+
+SPORT = 1337
+DPORT = 1337
+
+C2_IP = "192.168.1.1"
+CLIENT_IP = "192.168.1.2"
