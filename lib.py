@@ -21,7 +21,7 @@ def set_payload(pkt: TCP, payload: bytes) -> TCP:
 def create_syn() -> TCP:
     pkt = TCP(
         sport=config.SPORT,
-        dport=config.DPORT,
+        dport=9999,
         flags="S"
     )
     return pkt
@@ -30,7 +30,7 @@ def create_syn() -> TCP:
 def create_synack() -> TCP:
     pkt = TCP(
         sport=config.SPORT,
-        dport=config.DPORT,
+        dport=9999,
         flags="SA"
     )
     return pkt
@@ -39,7 +39,7 @@ def create_synack() -> TCP:
 def create_ack() -> TCP:
     pkt = TCP(
         sport=config.SPORT,
-        dport=config.DPORT,
+        dport=9999,
         flags="A"
     )
     return pkt
@@ -48,7 +48,7 @@ def create_ack() -> TCP:
 def create_fin() -> TCP:
     pkt = TCP(
         sport=config.SPORT,
-        dport=config.DPORT,
+        dport=9999,
         flags="F"
     )
     return pkt
@@ -57,7 +57,7 @@ def create_fin() -> TCP:
 def create_pa() -> TCP:
     pkt = TCP(
         sport=config.SPORT,
-        dport=config.DPORT,
+        dport=9999,
         flags="PA"
     )
     return pkt
