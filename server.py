@@ -14,6 +14,7 @@ MSG_RAW = [""]
 packet_counter = 0
 
 def split_string_into_chunks(input_string, chunk_size=6):
+    # This function will return a list of strings of size 6
     for i in range(0, len(input_string), chunk_size):
         yield input_string[i:i+chunk_size]
 
@@ -24,24 +25,31 @@ def binary_to_ascii(binary_string):
     # Convert integer to ASCII character
     ascii_character = chr(decimal_value)
 
+    # return character
     return ascii_character
 
 
 def parse(input):
-    #chunks = list(split_string_into_chunks(input))
+    # split into chunks of 6
     chunks = wrap(input, 6)
     msg = []
+    # add 01 to start of string to convert back to 8-bit ascii in binary representation
     for i in chunks:
         msg.append("01" + i)
     string = []
+    # convert message to ascii
     for i in msg:
         string.append(binary_to_ascii(i))
+
+    # turn it into a string
     final = ''.join(string)
 
+    # print message
     print(final)
 
 
 def convert(input):
+    # turn ints into binary
     if input == 0:
         return "000"
     elif input == 1:
@@ -60,6 +68,7 @@ def convert(input):
         return "111"
 
 def handle_packet(packet):
+    # listen for packets, and handle data
     global MSG_RAW
     global packet_counter
     packet_counter += 1
@@ -78,7 +87,7 @@ def handle_packet(packet):
 
 
 def main():
-    # sniff(filter="tcp and port 9999", prn=handle_packet, iface="lo0", store=0)
+    # listen for TCP packets and pass to packet handler
     sniff(filter="tcp", prn=handle_packet, iface="lo", store=0)
 
 

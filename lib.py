@@ -11,14 +11,14 @@ import config
 
 from scapy.all import TCP
 
-# implement methods for SYN, SYN ACK, ACK, FIN
-
 def set_payload(pkt: TCP, payload: bytes) -> TCP:
+    # set the payload of the packet
     pkt.reserved = payload
     return TCP
 
 
 def create_syn() -> TCP:
+    # create SYN packet
     pkt = TCP(
         sport=config.SPORT,
         dport=9999,
@@ -28,6 +28,7 @@ def create_syn() -> TCP:
 
 
 def create_synack() -> TCP:
+    # create SYNACK packet
     pkt = TCP(
         sport=config.SPORT,
         dport=9999,
@@ -37,6 +38,7 @@ def create_synack() -> TCP:
 
 
 def create_ack() -> TCP:
+    # create ACK packet
     pkt = TCP(
         sport=config.SPORT,
         dport=9999,
@@ -46,6 +48,7 @@ def create_ack() -> TCP:
 
 
 def create_fin() -> TCP:
+    # create FIN packet
     pkt = TCP(
         sport=config.SPORT,
         dport=9999,
@@ -55,6 +58,7 @@ def create_fin() -> TCP:
 
 
 def create_pa() -> TCP:
+    # create PUSH packet
     pkt = TCP(
         sport=config.SPORT,
         dport=9999,
@@ -80,18 +84,3 @@ def handle_ack(packet):
 
 
 
-def create_conn():
-    pass
-    # send SYN
-    # sniff for TCP on port... send to handle SYN/ACK
-    # send ACK
-    # send data
-    # send FIN
-
-def listen_conn():
-    pass
-    # sniff for TCP on port... send to handle SYN
-    # send SYN/ACK
-    # sniff for TCP on port... send to handle ACK
-    # recieve data
-    # wait for FIN
