@@ -10,7 +10,6 @@ import config
 
 from scapy.all import TCP
 
-
 def set_payload(pkt: TCP, payload: bytes) -> TCP:
     # set the payload of the packet
     pkt.reserved = payload
