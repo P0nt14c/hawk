@@ -7,7 +7,7 @@
 # Client for Hawk
 
 import lib
-from scapy.all import IP, TCP, send
+from scapy.all import IP, TCP, send, sniff
 
 def wrap_ip(payload):
     # wrap TCP packet in IP packet
@@ -44,8 +44,24 @@ def convert(input):
     elif input == "111":
         return 7
 
+def handle_synack(packet):
+    if packet.haslayer(TCP) and packet[TCP].flags == 0x12:
+        return True
 
 def send_msg(bin):
+    # send SYN
+    payload = lib.create_syn()
+    pkt = wrap_ip(payload)
+    send(pkt)
+
+    # sniff SYNACK
+    sniff(filter="tcp", prn=handle_synack, stop_filter=lambda p: True,iface="lo", store=0)
+
+    # send ACK
+    payload = lib.create_ack()
+    pkt = wrap_ip(payload)
+    send(pkt)
+
     # handles sending the message
     for let in bin:
         # split into XX:XXX:XXX for sending

